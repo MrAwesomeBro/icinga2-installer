@@ -38,7 +38,7 @@ icinga2 feature enable api
 service icinga2 restart
 
 # setup API config:
-template=`cat ./api.conf.txt`
+template=`cat ./files/api.conf.txt`
 echo $template > /etc/icinga2/features-enabled/api.conf 
 
 # Final echo:

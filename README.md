@@ -31,11 +31,11 @@ Run them:
 
 ## Don't forget!
 
-    echo "YourMySQLPassword" > mysqlpass.txt
-    echo "YourIcingaPassword" > icingapass.txt
+    echo "YourMySQLPassword" > mysqlpas/.txt
+    echo "YourIcingaPassword" > files/icingapass.txt
 
 And after you're done:
 
-    rm -rf mysqlpass.txt icingapass.txt
+    rm -rf files/
 
 

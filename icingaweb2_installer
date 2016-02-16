@@ -40,13 +40,13 @@ usermod -a -G icingacmd www-data
 apt-get install icingaweb2 -y
 
 # create database
-mysql -uroot -p`cat mysqlpass.txt` -e "create database icinga2;
-grant select, insert, update, delete, drop, create view, index, execute on icinga2.* to 'icingaweb'@'localhost' identified by '`cat icingapass.txt`';
+mysql -uroot -p`cat files/mysqlpass.txt` -e "create database icinga2;
+grant select, insert, update, delete, drop, create view, index, execute on icinga2.* to 'icingaweb'@'localhost' identified by '`cat files/icingapass.txt`';
 flush privileges;
 exit;"
 
 # insert default dump:
-mysql -uroot -p`cat mysqlpass.txt` icinga2 < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+mysql -uroot -p`cat files/mysqlpass.txt` icinga2 < /usr/share/icinga2-ido-mysql/schema/mysql.sql
 
 # final echo:
 echo ""
