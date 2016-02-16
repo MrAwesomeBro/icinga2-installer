@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Script to install icinga2 from debmon repositories
+# 16.02.2016 - Denis Walther
+
+# Check if script is runned by root:
+if (( $EUID != 0 )); then
+	echo ""
+	echo -e "Please run as root! Exiting.."
+	echo ""
+   	exit 1
+fi
+
+# Grep distribution:
+distro=`cat /etc/os-release | grep -oh 'jessie\|wheezy' | uniq`
+
+# Get repository key:
+wget -O - http://debmon.org/debmon/repo.key 2>/dev/null | apt-key add -
+
+# Insert repository:
+if [ "$distro" = "wheezy" ]; then
+	echo 'deb http://debmon.org/debmon debmon-wheezy main' >/etc/apt/sources.list.d/debmon.list
+elif [ "$distro" = "jessie" ]; then
+	echo 'deb http://debmon.org/debmon debmon-jessie main' >/etc/apt/sources.list.d/debmon.list
+else 
+	echo "EOL distribution or 'testing'!"
+	exit 1
+fi
+
+# run 'apt-get update' and install needed packages:
+apt-get update
+apt-get install icinga2 nagios-plugins -y
+service icinga2 restart
+
+# Enable some stuff in icinga2 and restart to take effect:
+icinga2 feature enable command 
+icinga2 feature enable api
+service icinga2 restart
+
+# setup API config:
+template=`cat ./api.conf.txt`
+echo $template > /etc/icinga2/features-enabled/api.conf 
+
+# Final echo:
+echo "Done successfully!"
+echo ""
+echo "you may now run 'icinga2 node wizard' to setup your node."
+echo ""
+

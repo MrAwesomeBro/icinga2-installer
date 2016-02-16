@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Script to install icingaweb2 from debmon repositories
+# 16.02.2016 - Denis Walther
+
+# Check if script is runned by root:
+if (( $EUID != 0 )); then
+	echo ""
+	echo -e "Please run as root! Exiting.."
+	echo ""
+   	exit 1
+fi
+
+# Grep distribution:
+distro=`cat /etc/os-release | grep -oh 'jessie\|wheezy' | uniq`
+
+# Get repo key:
+wget -O - http://packages.icinga.org/icinga.key | apt-key add - 
+
+# Insert repository:
+if [ "$distro" = "wheezy" ]; then
+	echo 'deb http://packages.icinga.org/wheezy icinga-wheezy main' > /etc/apt/sources.list.d/icinga-main-trusty.list
+elif [ "$distro" = "jessie" ]; then
+	echo 'deb http://packages.icinga.org/jessie icinga-jessie main' > /etc/apt/sources.list.d/icinga-main-trusty.list
+else 
+	echo "EOL distribution or 'testing'!"
+	exit 1
+fi
+
+# install the needed packages
+apt-get install mysql-server mysql-client icinga2-ido-mysql apache2 -y
+icinga2 feature enable ido-mysql
+service icinga2 restart
+
+# group permissions
+addgroup --system icingacmd
+usermod -a -G icingacmd www-data
+
+# now install icingaweb2
+apt-get install icingaweb2 -y
+
+# create database
+mysql -uroot -p`cat mysqlpass.txt` -e "create database icinga2;
+grant select, insert, update, delete, drop, create view, index, execute on icinga2.* to 'icingaweb'@'localhost' identified by '`cat icingapass.txt`';
+flush privileges;
+exit;"
+
+# insert default dump:
+mysql -uroot -p`cat mysqlpass.txt` icinga2 < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+
+# final echo:
+echo ""
+echo "Done successfully."
+echo "You may now run the graphical installer at 'http://localhost/icingaweb2/setup'."
+echo ""
+echo "To generate the setup token run 'icingacli setup config directory --group icingaweb2;' and 'icingacli setup token create;'"
+echo ""
+exit 0
