@@ -31,7 +31,7 @@ Run them:
 
 ## Don't forget!
 
-    echo "YourMySQLPassword" > mysqlpas/.txt
+    echo "YourMySQLPassword" > files/mysqlpas.txt
     echo "YourIcingaPassword" > files/icingapass.txt
 
 And after you're done:
