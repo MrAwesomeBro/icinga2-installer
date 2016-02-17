@@ -38,4 +38,6 @@ And after you're done:
 
     rm -rf files/
 
+# Wiki
 
+The wiki can be found [here](https://github.com/MrAwesomeBro/icinga2-installer/wiki)
