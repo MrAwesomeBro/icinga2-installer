@@ -14,6 +14,10 @@ Run it:
 
     ./icinga2_installer
 
+Restart Icinga:
+
+    service icinga2 restart
+
 ## Installing the master with Icingaweb2
 
 Clone it:
@@ -28,6 +32,10 @@ Run them:
 
     ./icinga2_installer
     ./icingaweb2_installer
+
+Restart Icinga:
+
+    service icinga2 restart
 
 ## Don't forget!
 
