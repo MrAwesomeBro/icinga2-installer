@@ -4,7 +4,7 @@
 # 16.02.2016 - Denis Walther
 
 # Check if script is runned by root:
-if (( $EUID != 0 )); then
+if [ "$EUID" != "0" ]; then
 	echo ""
 	echo -e "Please run as root! Exiting.."
 	echo ""
